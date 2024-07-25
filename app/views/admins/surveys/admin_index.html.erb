@@ -1,0 +1,18 @@
+<h1>管理者用アンケート一覧</h1>
+
+<%= link_to 'New Survey', new_admins_survey_path %>
+
+<% if @surveys.any? %>
+<% @surveys.each do |survey| %>
+<div>
+  <h2><%= link_to survey.title, admins_survey_path(survey) %></h2>
+  <p><%= survey.description %></p>
+  <%= link_to 'Edit', edit_admins_survey_path(survey) %> |
+  <%= button_to 'Delete', admins_survey_path(survey), method: :delete, data: { confirm: 'Are you sure?' } %>
+</div>
+<% end %>
+<% else %>
+<p>アンケートがありません。</p>
+<% end %>
+
+<%= button_to "ログアウト", destroy_admin_session_path, method: :delete %>
