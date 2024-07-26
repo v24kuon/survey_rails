@@ -16,19 +16,17 @@ module Admins
     # GET /admin/surveys/new
     def new
       @survey = Survey.new
+      @survey.questions.build
     end
 
     # POST /admin/surveys
     def create
       @survey = Survey.new(survey_params)
-
       respond_to do |format|
         if @survey.save
           format.html { redirect_to admins_surveys_path, notice: "Survey was successfully created." }
-          format.json { render :show, status: :created, location: @survey }
         else
           format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @survey.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -66,7 +64,7 @@ module Admins
     end
 
     def survey_params
-      params.require(:survey).permit(:title, :description)
+      params.require(:survey).permit(:title, questions_attributes: [:id, :question_title, :question_type, :_destroy])
     end
   end
 end
