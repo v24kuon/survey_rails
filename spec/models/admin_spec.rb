@@ -3,37 +3,37 @@ require 'rails_helper'
 RSpec.describe Admin, type: :model do
   let(:admin) { create(:admin) }
 
-  describe 'validations' do
-    it 'is valid with valid attributes' do
+  describe 'バリデーション' do
+    it '有効な属性で作成された場合、有効であること' do
       expect(admin).to be_valid
     end
 
-    it 'is not valid without an email' do
+    it 'メールアドレスがない場合、無効であること' do
       admin.email = nil
       expect(admin).to_not be_valid
     end
 
-    it 'is not valid without a password' do
+    it 'パスワードがない場合、無効であること' do
       admin.password = nil
       expect(admin).to_not be_valid
     end
 
-    it 'is not valid with a short password' do
+    it 'パスワードが短すぎる場合、無効であること' do
       admin.password = 'short'
       expect(admin).to_not be_valid
     end
   end
 
-  describe 'devise modules' do
-    it 'uses database_authenticatable module' do
+  describe 'Deviseモジュール' do
+    it 'database_authenticatableモジュールを使用していること' do
       expect(Admin.devise_modules).to include(:database_authenticatable)
     end
 
-    it 'uses rememberable module' do
+    it 'rememberableモジュールを使用していること' do
       expect(Admin.devise_modules).to include(:rememberable)
     end
 
-    it 'uses validatable module' do
+    it 'validatableモジュールを使用していること' do
       expect(Admin.devise_modules).to include(:validatable)
     end
   end

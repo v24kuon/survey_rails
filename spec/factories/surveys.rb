@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :survey do
-    title { "MyString" }
-    description { "MyText" }
+    sequence(:title) { |n| "アンケート#{n}" }
+    description { "これはアンケートの説明です。" }
   end
 end
