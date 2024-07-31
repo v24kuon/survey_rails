@@ -1,7 +1,8 @@
 <h1>新規アンケート作成</h1>
 
-<%= render "form", survey: @survey %>
-
+<%= form_with(model: [:admins, @survey], local: true) do |form| %>
+<%= render "form", survey: @survey, form: form %>
+<% end %>
 <br>
 
 <div>
