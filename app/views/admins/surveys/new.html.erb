@@ -2,19 +2,7 @@
 
 <%= form_with(model: [:admins, @survey], local: true) do |form| %>
 <%= render "form", survey: @survey, form: form %>
-
-<h2>質問</h2>
-<div id="questions">
-  <%= form.fields_for :questions do |question_form| %>
-  <%= render "question_fields", f: question_form %>
-  <% end %>
-</div>
-
-<div>
-  <%= form.submit "アンケートを作成" %>
-</div>
 <% end %>
-
 <br>
 
 <div>

@@ -9,9 +9,8 @@ module Admins
       render 'admin_index'
     end
 
-  def show
-    @survey = Survey.find(params[:id])
-  end
+    def show
+    end
 
     # GET /admin/surveys/new
     def new
@@ -22,12 +21,10 @@ module Admins
     # POST /admin/surveys
     def create
       @survey = Survey.new(survey_params)
-      respond_to do |format|
-        if @survey.save
-          format.html { redirect_to admins_surveys_path, notice: "Survey was successfully created." }
-        else
-          format.html { render :new, status: :unprocessable_entity }
-        end
+      if @survey.save
+        redirect_to admins_surveys_path, notice: "アンケートが正常に作成されました。"
+      else
+        render :new, status: :unprocessable_entity
       end
     end
 
@@ -37,24 +34,24 @@ module Admins
 
     # PATCH/PUT /admin/surveys/:id
     def update
-      respond_to do |format|
-        if @survey.update(survey_params)
-          format.html { redirect_to admins_surveys_path, notice: "Survey was successfully updated." }
-          format.json { render :show, status: :ok, location: @survey }
-        else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @survey.errors, status: :unprocessable_entity }
-        end
+      if @survey.update(survey_params)
+        redirect_to admins_surveys_path, notice: "アンケートが正常に更新されました。"
+      else
+        render :edit, status: :unprocessable_entity
       end
     end
 
     # DELETE /admin/surveys/:id
     def destroy
-      @survey.destroy!
-      respond_to do |format|
-        format.html { redirect_to admins_surveys_path, notice: "Survey was successfully destroyed." }
-        format.json { head :no_content }
-      end
+      @survey.destroy
+      redirect_to admins_surveys_path, notice: "アンケートが正常に削除されました。"
+    end
+
+    def new_question
+      @survey = params[:survey_id] == '0' ? Survey.new : Survey.find(params[:survey_id])
+      @question = @survey.questions.build
+      @question_index = params[:question_index].to_i
+      render layout: false
     end
 
     private
@@ -64,7 +61,7 @@ module Admins
     end
 
     def survey_params
-      params.require(:survey).permit(:title, questions_attributes: [:id, :question_title, :question_type, :_destroy])
+      params.require(:survey).permit(:title, :description, questions_attributes: [:id, :question_title, :question_type, :_destroy])
     end
   end
 end

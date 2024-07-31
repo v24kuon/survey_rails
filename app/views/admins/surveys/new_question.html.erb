@@ -1,0 +1,11 @@
+<%= turbo_frame_tag "new_question_#{@question_index}" do %>
+  <%= fields_for :survey do |survey_form| %>
+    <%= survey_form.fields_for :questions_attributes, @question, index: @question_index do |question_form| %>
+      <%= render 'question_fields', f: question_form %>
+    <% end %>
+  <% end %>
+
+  <%= turbo_frame_tag "new_question_#{@question_index + 1}" do %>
+    <%= link_to "質問を追加", admins_survey_new_question_path(survey_id: @survey.persisted? ? @survey.id : 0, question_index: @question_index + 1), data: { turbo_frame: "new_question_#{@question_index + 1}" } %>
+  <% end %>
+<% end %>

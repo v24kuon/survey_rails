@@ -4,7 +4,10 @@ Rails.application.routes.draw do
     sessions: "admins/sessions"
   }
   namespace :admins do
-    resources :surveys
+    resources :surveys do
+      resources :questions, only: [:destroy]
+      get 'questions/new', to: 'surveys#new_question', as: :new_question
+    end
   end
   root 'surveys#home'
 end

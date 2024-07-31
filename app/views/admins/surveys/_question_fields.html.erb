@@ -1,12 +1,22 @@
-<div class="nested-fields">
-  <div>
-    <%= f.label :question_title, "質問タイトル" %>
-    <%= f.text_field :question_title %>
+<%= turbo_frame_tag dom_id(f.object) do %>
+  <div class="nested-fields">
+    <div>
+      <%= f.label :question_title, "質問タイトル" %>
+      <%= f.text_field :question_title %>
+    </div>
+    <div>
+      <%= f.label :question_type, "質問タイプ" %>
+      <%= f.select :question_type, Question.question_types.keys.map { |k| [k.humanize, k] } %>
+    </div>
+    <%= f.hidden_field :_destroy %>
+    <% if f.object.persisted? %>
+      <%= link_to "削除する", admins_survey_question_path(@survey, f.object),
+        data: {
+          turbo_method: :delete,
+          turbo_confirm: "本当に削除しますか？"
+        } %>
+    <% else %>
+      <%= link_to "削除", "#", onclick: "this.closest('.nested-fields').style.display='none'; this.previousElementSibling.value='1'; return false;" %>
+    <% end %>
   </div>
-  <div>
-    <%= f.label :question_type, "質問タイプ" %>
-    <%= f.select :question_type, Question.question_types.keys.map { |k| [k.humanize, k] } %>
-  </div>
-  <%= f.hidden_field :_destroy %>
-  <%= button_tag "質問を削除", type: 'button', onclick: "this.previousElementSibling.value='1'; this.closest('.nested-fields').style.display='none';" %>
-</div>
+<% end %>
