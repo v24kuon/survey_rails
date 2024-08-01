@@ -6,7 +6,8 @@
 <% @surveys.each do |survey| %>
 <div>
   <h2><%= link_to survey.title, admins_survey_path(survey) %></h2>
-  <p><%= survey.description %></p>
+  <p>概要:<%= survey.summary %></p>
+  <p>説明:<%= survey.description %></p>
   <%= link_to 'Edit', edit_admins_survey_path(survey) %> |
   <%= button_to 'Delete', admins_survey_path(survey), method: :delete, data: { confirm: 'Are you sure?' } %>
 </div>

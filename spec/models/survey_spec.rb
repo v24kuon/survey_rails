@@ -18,14 +18,26 @@ RSpec.describe Survey, type: :model do
       expect(survey.errors[:description]).to include("を入力してください")
     end
 
+    # summaryのテストを追加
+    it 'サマリーが空の場合は無効であること' do
+      survey = build(:survey, summary: '')
+      expect(survey).to be_invalid
+      expect(survey.errors[:summary]).to include("を入力してください")
+    end
+
     context 'すべての属性が存在する場合' do
-      it 'タイトル、説明、質問タイトル、質問タイプが存在する場合は有効であること' do
-        survey = build(:survey, questions_attributes: [
-          {
-            question_title: '有効な質問タイトル',
-            question_type: 'text'
-          }
-        ])
+      it 'タイトル、サマリー、説明、質問タイトル、質問タイプが存在する場合は有効であること' do
+        survey = build(:survey,
+          title: '有効なタイトル',
+          summary: '有効なサマリー',
+          description: '有効な説明',
+          questions_attributes: [
+            {
+              question_title: '有効な質問タイトル',
+              question_type: 'text'
+            }
+          ]
+        )
         expect(survey).to be_valid
       end
     end

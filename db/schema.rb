@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_26_060735) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_01_085233) do
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_26_060735) do
     t.integer "question_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_required", default: false
     t.index ["survey_id"], name: "index_questions_on_survey_id"
   end
 
@@ -37,6 +38,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_26_060735) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "summary"
   end
 
   add_foreign_key "questions", "surveys"

@@ -1,14 +1,16 @@
 <p style="color: green"><%= notice %></p>
 
 <h1><%= @survey.title %></h1>
-<p><%= @survey.description %></p>
+<p>概要:<%= @survey.summary %></p>
+<p>説明:<%= @survey.description %></p>
 
 <h2>質問一覧</h2>
 <ul>
   <% @survey.questions.each do |question| %>
     <li>
       <strong>タイトル:</strong> <%= question.question_title %><br>
-      <strong>タイプ:</strong> <%= question.question_type %>
+      <strong>タイプ:</strong> <%= question.question_type %><br>
+      <strong>入力:</strong> <%= question.is_required ? '必須' : '必須ではない' %>
     </li>
   <% end %>
 </ul>

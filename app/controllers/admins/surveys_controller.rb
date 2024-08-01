@@ -61,7 +61,7 @@ module Admins
     end
 
     def survey_params
-      params.require(:survey).permit(:title, :description, questions_attributes: [:id, :question_title, :question_type, :_destroy])
+      params.require(:survey).permit(:title, :description, :summary, questions_attributes: [:id, :question_title, :question_type, :is_required, :_destroy])
     end
   end
 end

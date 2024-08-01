@@ -29,6 +29,7 @@ RSpec.describe Admins::SurveysController, type: :request do
     it 'アンケートの詳細を表示すること' do
       get admins_survey_path(survey)
       expect(response.body).to include(survey.title)
+      expect(response.body).to include(survey.summary) # summaryの確認を追加
       expect(response.body).to include(survey.description)
     end
   end
@@ -44,6 +45,7 @@ RSpec.describe Admins::SurveysController, type: :request do
     context '有効なパラメータの場合' do
       let(:valid_attributes) do
         attributes_for(:survey).merge(
+          summary: 'テストサマリー', # summaryを追加
           questions_attributes: [attributes_for(:question)]
         )
       end
@@ -57,6 +59,12 @@ RSpec.describe Admins::SurveysController, type: :request do
       it 'アンケート一覧ページにリダイレクトすること' do
         post admins_surveys_path, params: { survey: valid_attributes }
         expect(response).to redirect_to(admins_surveys_path)
+      end
+
+      # summaryが正しく設定されることを確認するテストを追加
+      it '新しいアンケートが正しく作成されること' do
+        post admins_surveys_path, params: { survey: valid_attributes }
+        expect(Survey.last.summary).to eq 'テストサマリー'
       end
     end
 
@@ -85,6 +93,7 @@ RSpec.describe Admins::SurveysController, type: :request do
       let(:new_attributes) do
         {
           title: '新しいタイトル',
+          summary: '新しいサマリー', # summaryを追加
           questions_attributes: [
             { id: survey.questions.first.id, question_title: '新しい質問タイトル' }
           ]
@@ -95,6 +104,7 @@ RSpec.describe Admins::SurveysController, type: :request do
         patch admins_survey_path(survey), params: { survey: new_attributes }
         survey.reload
         expect(survey.title).to eq '新しいタイトル'
+        expect(survey.summary).to eq '新しいサマリー' # summaryの確認を追加
         expect(survey.questions.first.question_title).to eq '新しい質問タイトル'
       end
 

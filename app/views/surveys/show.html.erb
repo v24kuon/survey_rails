@@ -1,5 +1,26 @@
-<h1><%= @survey.title %></h1>
+<h2><%= @survey.title %></h2>
+<p>説明:<br><%= @survey.description %></p>
 
-<p><%= @survey.description %></p>
+<%= form_with(url: '#', local: true) do |form| %>
+  <%= form.hidden_field :survey_id, value: @survey.id %>
+
+  <% @survey.questions.each do |question| %>
+    <div class="question">
+      <%= form.label "responses[#{question.id}]", question.question_title %>
+      <% case question.question_type %>
+      <% when 'text' %>
+        <%= form.text_field "responses[#{question.id}]", required: question.is_required %>
+      <% when 'textarea' %>
+        <%= form.text_area "responses[#{question.id}]", required: question.is_required %>
+      <% when 'number' %>
+        <%= form.number_field "responses[#{question.id}]", required: question.is_required %>
+      <% when 'email' %>
+        <%= form.email_field "responses[#{question.id}]", required: question.is_required %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= form.submit '回答を送信' %>
+<% end %>
 
 <p><%= link_to 'Back', surveys_path %></p>
