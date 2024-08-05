@@ -1,4 +1,5 @@
 class SurveysController < ApplicationController
+  before_action :authenticate_user_or_admin!, except: [:home]
   before_action :set_survey, only: [:show]
 
   def home
@@ -20,5 +21,11 @@ class SurveysController < ApplicationController
 
   def set_survey
     @survey = Survey.find(params[:id])
+  end
+
+  def authenticate_user_or_admin!
+    unless user_signed_in? || admin_signed_in?
+      redirect_to new_user_session_path, alert: 'ログインが必要です。'
+    end
   end
 end

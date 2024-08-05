@@ -5,14 +5,30 @@
 ### 管理者
 
 ・新規登録は画面上では不可<br>
-・email フィールド とパスワードフィールドが表示される<br>
 ・email とパスワードでログイン<br>
 ・ログイン後は admins_surveys_path へリダイレクト<br>
 ・ログアウト後は root_path にリダイレクト<br>
+・ユーザー一覧は管理者のみ表示可能<br>
+・ユーザ詳細は管理者も表示可能<br>
 ・上記はテスト済み
 
 ### ユーザー側
-・設計作成中
+・新規登録時以下の項目で登録を行う<br>
+　・会社名<br>
+　・ブース名<br>
+　・ブース詳細<br>
+　・氏名<br>
+　・電話番号<br>
+　・メールアドレス<br>
+　・郵便番号<br>
+　・住所<br>
+<br>
+・email とパスワードでログイン<br>
+・ログイン画面でパスワードリセット可能<br>
+・userは自身の詳細情報のみ閲覧可能<br>
+・userは自身の登録情報のみ編集可能
+・テスト作成済み
+
 
 
 ## アンケート
@@ -33,6 +49,7 @@
 ### ユーザー側
 
 ・トップページ、一覧ページ、詳細ページ作成<br>
+・一覧ページ、詳細ページは登録ユーザーのみ閲覧可能<br>
 ・管理画面で入力された情報を元にアンケート作成<br>
 ・表示テスト済み<br>
 ・フォーム表示のテストまだ
@@ -44,17 +61,35 @@
 ## メモ
 
 ```
-surveys GET    /surveys(.:format)       surveys#index
-survey  GET    /surveys/:id(.:format)   surveys#show
-admins_survey_question DELETE /admins/surveys/:survey_id/questions/:id(.:format) admins/questions#destroy
-admins_survey_new_question GET /admins/surveys/:survey_id/questions/new(.:format) admins/surveys#new_question
-admins_surveys GET  /admins/surveys(.:format) admins/surveys#index
-               POST /admins/surveys(.:format) admins/surveys#create
-new_admins_survey GET    /admins/surveys/new(.:format)      admins/surveys#new
-edit_admins_survey GET   /admins/surveys/:id/edit(.:format) admins/surveys#edit
-admins_survey GET    /admins/surveys/:id(.:format) admins/surveys#show
-              PATCH  /admins/surveys/:id(.:format) admins/surveys#update
-              PUT    /admins/surveys/:id(.:format) admins/surveys#update
-              DELETE /admins/surveys/:id(.:format) admins/surveys#destroy
-root GET    / surveys#home
+                        new_user_session GET    /users/sign_in(.:format)                                                                          devise/sessions#new
+                            user_session POST   /users/sign_in(.:format)                                                                          devise/sessions#create
+                    destroy_user_session DELETE /users/sign_out(.:format)                                                                         devise/sessions#destroy
+                       new_user_password GET    /users/password/new(.:format)                                                                     devise/passwords#new
+                      edit_user_password GET    /users/password/edit(.:format)                                                                    devise/passwords#edit
+                           user_password PATCH  /users/password(.:format)                                                                         devise/passwords#update
+                                         PUT    /users/password(.:format)                                                                         devise/passwords#update
+                                         POST   /users/password(.:format)                                                                         devise/passwords#create
+                cancel_user_registration GET    /users/cancel(.:format)                                                                           devise/registrations#cancel
+                   new_user_registration GET    /users/sign_up(.:format)                                                                          devise/registrations#new
+                  edit_user_registration GET    /users/edit(.:format)                                                                             devise/registrations#edit
+                       user_registration PATCH  /users(.:format)                                                                                  devise/registrations#update
+                                         PUT    /users(.:format)                                                                                  devise/registrations#update
+                                         DELETE /users(.:format)                                                                                  devise/registrations#destroy
+                                         POST   /users(.:format)                                                                                  devise/registrations#create
+                                 surveys GET    /surveys(.:format)                                                                                surveys#index
+                                  survey GET    /surveys/:id(.:format)                                                                            surveys#show
+                       new_admin_session GET    /admins/sign_in(.:format)                                                                         admins/sessions#new
+                           admin_session POST   /admins/sign_in(.:format)                                                                         admins/sessions#create
+                   destroy_admin_session DELETE /admins/sign_out(.:format)                                                                        admins/sessions#destroy
+                  admins_survey_question DELETE /admins/surveys/:survey_id/questions/:id(.:format)                                                admins/questions#destroy
+              admins_survey_new_question GET    /admins/surveys/:survey_id/questions/new(.:format)                                                admins/surveys#new_question
+                          admins_surveys GET    /admins/surveys(.:format)                                                                         admins/surveys#index
+                                         POST   /admins/surveys(.:format)                                                                         admins/surveys#create
+                       new_admins_survey GET    /admins/surveys/new(.:format)                                                                     admins/surveys#new
+                      edit_admins_survey GET    /admins/surveys/:id/edit(.:format)                                                                admins/surveys#edit
+                           admins_survey GET    /admins/surveys/:id(.:format)                                                                     admins/surveys#show
+                                         PATCH  /admins/surveys/:id(.:format)                                                                     admins/surveys#update
+                                         PUT    /admins/surveys/:id(.:format)                                                                     admins/surveys#update
+                                         DELETE /admins/surveys/:id(.:format)                                                                     admins/surveys#destroy
+                                    root GET    /                                                                                                 surveys#home
 ```

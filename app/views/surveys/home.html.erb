@@ -4,7 +4,7 @@
 <% @surveys.each do |survey| %>
 <div>
   <h2><%= link_to survey.title, survey_path(survey) %></h2>
-  <p><%= survey.description %></p>
+  <p><%= survey.summary %></p>
 </div>
 <% end %>
 <% else %>
