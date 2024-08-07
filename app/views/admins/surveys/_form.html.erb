@@ -1,29 +1,28 @@
-<%= form_with(model: [:admins, @survey], local: true) do |f| %>
-  <%= render "admins/shared/error_messages", resource: @survey %>
+<%= form_with(model: [:admins, survey], local: true) do |form| %>
+<%= render "admins/shared/error_messages", resource: survey %>
   <div>
-    <%= f.label :title, "タイトル" %>
-    <%= f.text_field :title %>
-  </div>
-
-  <div>
-    <%= f.label :summary, "概要" %>
-    <%= f.text_area :summary %>
+      <%= form.label :title, "タイトル" %>
+      <%= form.text_field :title %>
   </div>
 
   <div>
-    <%= f.label :description, "説明" %>
-    <%= f.text_area :description %>
+      <%= form.label :summary, "概要" %>
+      <%= form.text_area :summary %>
   </div>
 
-  <div id="questions">
-    <%= f.fields_for :questions do |question_form| %>
-      <%= render 'question_fields', f: question_form %>
-    <% end %>
+  <div>
+      <%= form.label :description, "説明" %>
+      <%= form.text_area :description %>
   </div>
 
-  <%= turbo_frame_tag "new_question_#{f.object.questions.size}" do %>
-    <%= link_to "質問を追加", admins_survey_new_question_path(survey_id: @survey.persisted? ? @survey.id : 0, question_index: f.object.questions.size), data: { turbo_frame: "new_question_#{f.object.questions.size}" } %>
+  <%= form.fields_for :questions do |subform| %>
+    <%= render partial: "admins/questions/form", locals: {form: subform} %>
   <% end %>
 
-  <%= f.submit "保存", class: "btn btn-success" %>
+  <%= turbo_frame_tag 'new_questions' %>
+
+  <%= link_to "NEW", new_admins_question_path, data: {turbo: true, turbo_stream: true} %>
+  <div>
+    <%= form.submit %>
+  </div>
 <% end %>

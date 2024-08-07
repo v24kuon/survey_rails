@@ -1,0 +1,23 @@
+<% index ||= nil %>
+<%= turbo_frame_tag dom_id(form.object, index) do %>
+  <div>
+    <%= form.hidden_field :id %>
+    <div>
+      <%= form.label :question_title, "質問タイトル" %>
+      <%= form.text_field :question_title %>
+    </div>
+    <div>
+      <%= form.label :question_type, "質問タイプ" %>
+      <%= form.select :question_type, Question.question_types.keys.map { |k| [k.humanize, k] } %>
+    </div>
+    <div>
+      <%= form.label :is_required do %>
+        <%= form.check_box :is_required %>
+        入力を必須にする
+      <% end %>
+    </div>
+    <%= link_to "DELETE", admins_question_path(form.object.id||0), data: { turbo_method: :delete, turbo_confirm: "SURE?", turbo: true, turbo_stream: true} %>
+    <%= form.label :index %>
+    <%= form.index %>
+  </div>
+<% end %>

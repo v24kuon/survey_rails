@@ -1,0 +1,9 @@
+<%= form_with(model: Survey.new, id:"GOMI") do |form| %>
+  <%= turbo_stream.append 'new_questions' do %>
+    <%= form.fields_for :questions, Question.new, child_index: @index do |subform| %>
+    <%= render partial: "admins/questions/form", locals: {form: subform, index: @index} %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.remove 'GOMI' %>

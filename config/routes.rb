@@ -11,10 +11,8 @@ Rails.application.routes.draw do
     get 'users/index'
     get 'users/show'
     resources :users, only: [:index, :show]
-    resources :surveys do
-      resources :questions, only: [:destroy]
-      get 'questions/new', to: 'surveys#new_question', as: :new_question
-    end
+    resources :surveys
+    resources :questions, only: [:new, :create, :destroy]
   end
 
   root 'surveys#home'

@@ -1,10 +1,6 @@
 <h1>新規アンケート作成</h1>
 
-<%= form_with(model: [:admins, @survey], local: true) do |form| %>
-<%= render "form", survey: @survey, form: form %>
-<% end %>
-<br>
-
+<%= render "form", survey: @survey %>
 <div>
   <%= link_to "Back to surveys", admins_surveys_path %>
 </div>

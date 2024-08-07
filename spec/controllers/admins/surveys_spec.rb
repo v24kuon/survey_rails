@@ -145,14 +145,4 @@ RSpec.describe Admins::SurveysController, type: :request do
       expect(response).to redirect_to(admins_surveys_path)
     end
   end
-
-  describe 'GET #new_question' do
-    it '新しい質問フォームを表示し、インデックスを設定すること' do
-      get admins_survey_new_question_path(survey.id)
-      expect(response).to have_http_status(:ok)
-
-      expect(response.body).to include('質問タイトル')
-      expect(response.body).to include(survey.id.to_s)
-    end
-  end
 end

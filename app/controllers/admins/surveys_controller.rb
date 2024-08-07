@@ -47,13 +47,6 @@ module Admins
       redirect_to admins_surveys_path, notice: "アンケートが正常に削除されました。"
     end
 
-    def new_question
-      @survey = params[:survey_id] == '0' ? Survey.new : Survey.find(params[:survey_id])
-      @question = @survey.questions.build
-      @question_index = params[:question_index].to_i
-      render layout: false
-    end
-
     private
 
     def set_survey
