@@ -8,11 +8,15 @@ Rails.application.routes.draw do
   }
 
   namespace :admins do
-    get 'users/index'
-    get 'users/show'
     resources :users, only: [:index, :show]
     resources :surveys
-    resources :questions, only: [:new, :create, :destroy]
+    resources :questions, only: [], param: :index do
+      member do
+        delete '(:id)' => "questions#destroy", as: ""
+        post '/' => "questions#create"
+      end
+    end
+    resources :choices, only: [:new, :destroy]
   end
 
   root 'surveys#home'

@@ -10,7 +10,8 @@
     <li>
       <strong>タイトル:</strong> <%= question.question_title %><br>
       <strong>タイプ:</strong> <%= question.question_type %><br>
-      <strong>入力:</strong> <%= question.is_required ? '必須' : '必須ではない' %>
+      <strong>入力:</strong> <%= question.is_required ? '必須' : '必須ではない' %><br>
+      <strong>選択肢:</strong> <%= question.choices.map(&:choice_text).join(', ') %><br>
     </li>
   <% end %>
 </ul>

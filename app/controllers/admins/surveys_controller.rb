@@ -14,8 +14,7 @@ module Admins
 
     # GET /admin/surveys/new
     def new
-      @survey = Survey.new
-      @survey.questions.build
+      @survey = Survey.new(questions: [Question.new])
     end
 
     # POST /admin/surveys
@@ -54,7 +53,11 @@ module Admins
     end
 
     def survey_params
-      params.require(:survey).permit(:title, :description, :summary, questions_attributes: [:id, :question_title, :question_type, :is_required, :_destroy])
+      params.require(:survey).permit(
+        :title, :description, :summary,
+        questions_attributes: [:id, :question_title, :question_type, :_destroy,
+          choices_attributes: [:id, :choice_text, :order_number, :_destroy]]
+      )
     end
   end
 end

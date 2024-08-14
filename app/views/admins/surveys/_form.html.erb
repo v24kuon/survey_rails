@@ -1,5 +1,15 @@
-<%= form_with(model: [:admins, survey], local: true) do |form| %>
-<%= render "admins/shared/error_messages", resource: survey %>
+<%= form_with(model: [:admins, @survey]) do |form| %>
+  <% if @survey.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(survey.errors.count, "error") %> prohibited this survey from being saved:</h2>
+
+      <ul>
+        <% survey.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
   <div>
       <%= form.label :title, "タイトル" %>
       <%= form.text_field :title %>
@@ -15,13 +25,16 @@
       <%= form.text_area :description %>
   </div>
 
-  <%= form.fields_for :questions do |subform| %>
-    <%= render partial: "admins/questions/form", locals: {form: subform} %>
-  <% end %>
+  <h4>Questions</h4>
+  <div id="questions">
+    <%= form.fields_for :questions do |question_form| %>
+      <%= render "admins/questions/form", form: question_form %>
+    <% end %>
+  </div>
 
-  <%= turbo_frame_tag 'new_questions' %>
 
-  <%= link_to "NEW", new_admins_question_path, data: {turbo: true, turbo_stream: true} %>
+  <%= form.submit "Add question", formaction: admins_question_path(@survey.questions.size), formmethod: :post, formnovalidate: true, id: "add-question" %>
+
   <div>
     <%= form.submit %>
   </div>

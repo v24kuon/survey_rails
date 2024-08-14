@@ -1,0 +1,19 @@
+<% index ||= nil %>
+<%= turbo_frame_tag "choice_#{Time.now.to_i}" do %>
+  <div>
+    <%= form.hidden_field :id %>
+    <div>
+      <%= form.label :choice_text, "選択肢" %>
+      <%= form.text_field :choice_text %>
+    </div>
+    <div>
+      <%= form.label :order_number, "順番" %>
+      <%= form.text_field :order_number %>
+    </div>
+    <% if form.object.persisted? %>
+      <%= link_to "DELETE", admins_choice_path(form.object.id), data: { turbo_method: :delete, turbo_confirm: "SURE?", turbo: true, turbo_stream: true} %>
+    <% else %>
+      <%= link_to "DELETE", "#", onclick: "this.closest('turbo-frame').remove(); return false;", data: { turbo: false } %>
+    <% end %>
+  </div>
+<% end %>
