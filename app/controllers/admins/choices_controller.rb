@@ -1,25 +1,18 @@
 module Admins
   class ChoicesController < ApplicationController
-    before_action :set_choice, only: [:destroy]
+    before_action :authenticate_admin!
+    before_action :setup_question
 
     def new
-      @choice = Choice.new
-      @index = params[:index] || Time.now.to_i
     end
 
     def destroy
-      @choice.destroy!
-
-      respond_to do |format|
-        format.html { redirect_to admins_surveys_path, notice: "Question was successfully destroyed." }
-        format.json { head :no_content }
-        format.turbo_stream
-      end
     end
 
     private
-    def set_choice
-      @choice = Choice.find(params[:id])
+
+    def setup_question
+      @survey = Survey.new(questions: [Question.new(choices: [Choice.new])])
     end
   end
 end

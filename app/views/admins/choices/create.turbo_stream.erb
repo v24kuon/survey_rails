@@ -1,0 +1,18 @@
+<% question_index = params[:question_index].to_i %>
+<%= fields model: @survey do |survey_form| %>
+  <%= survey_form.fields_for :questions, child_index: question_index do |question_form| %>
+    <%= question_form.fields_for :choices, child_index: params[:index] do |choice_form| %>
+      <%= turbo_stream.replace "add-choice-#{question_index}" do %>
+        <%= survey_form.submit "Add choice2",
+          formaction: admins_choice_path(Time.now.to_i, question_index: question_index),
+          formmethod: :post,
+          formnovalidate: true,
+          id: "add-choice-#{question_index}" %>
+      <% end %>
+
+      <%= turbo_stream.append "choices_#{question_index}" do %>
+        <%= render "form", form: choice_form %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

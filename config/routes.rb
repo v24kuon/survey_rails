@@ -16,7 +16,12 @@ Rails.application.routes.draw do
         post '/' => "questions#create"
       end
     end
-    resources :choices, only: [:new, :destroy]
+    resources :choices, only: [], param: :index do
+      member do
+        delete '(:id)' => "choices#destroy", as: ""
+        post '/' => "choices#create"
+      end
+    end
   end
 
   root 'surveys#home'

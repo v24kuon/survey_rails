@@ -34,7 +34,7 @@ module Admins
     # PATCH/PUT /admin/surveys/:id
     def update
       if @survey.update(survey_params)
-        redirect_to admins_surveys_path, notice: "アンケートが正常に更新されました。"
+        redirect_to admins_survey_path(@survey), notice: "アンケートが正常に更新されました。"
       else
         render :edit, status: :unprocessable_entity
       end

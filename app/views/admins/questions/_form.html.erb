@@ -8,8 +8,26 @@
 
   <div>
     <%= form.label :question_type, "質問タイプ" %>
-    <%= form.select :question_type,Question.question_types.keys.map { |k| [k.humanize, k] } %>
+    <%= form.select :question_type, Question.question_types.keys.map { |k| [k.humanize, k] } %>
   </div>
 
-  <%= form.submit "destroy question", formaction: admins_question_path(form.index, form.object.id), formmethod: :delete, formnovalidate: true, data: { turbo_frame: "question_#{form.index}" } %>
+  <h4>選択肢 (現在の数: <%= form.object.choices.size %>)</h4>
+  <h4>Choices</h4>
+  <div id="choices_<%= form.index %>">
+    <%= form.fields_for :choices do |choice_form| %>
+      <%= render "admins/choices/form", form: choice_form %>
+    <% end %>
+  </div>
+
+  <%= form.submit "Add choice",
+    formaction: admins_choice_path(Time.now.to_i, question_index: form.index),
+    formmethod: :post,
+    formnovalidate: true,
+    id: "add-choice-#{form.index}" %>
+
+  <%= form.submit "destroy question",
+    formaction: admins_question_path(form.index, form.object.id),
+    formmethod: :delete,
+    formnovalidate: true,
+    data: { turbo_frame: "question_#{form.index}" } %>
 <% end %>

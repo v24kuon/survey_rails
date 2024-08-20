@@ -1,9 +1,0 @@
-<%= turbo_stream.append "new_choices_#{@index}" do %>
-  <%= fields_for :survey, Survey.new do |survey_form| %>
-    <%= survey_form.fields_for :questions, Question.new, child_index: @index do |question_form| %>
-      <%= question_form.fields_for :choices, Choice.new, child_index: Time.now.to_i do |choice_form| %>
-        <%= render partial: "admins/choices/form", locals: { form: choice_form, index: @index } %>
-      <% end %>
-    <% end %>
-  <% end %>
-<% end %>

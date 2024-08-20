@@ -1,0 +1,10 @@
+<%= fields model: @survey do |survey_form| %>
+  <%= survey_form.fields_for :questions, child_index: params[:question_index] do |question_form| %>
+    <%= question_form.fields_for :choices, child_index: params[:index] do |choice_form| %>
+      <%= turbo_frame_tag "choice_#{choice_form.index}" do %>
+        <%= choice_form.hidden_field :id, value: params[:id] %>
+        <%= choice_form.hidden_field :_destroy, value: true %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,7 +1,7 @@
 class Question < ApplicationRecord
   belongs_to :survey
   has_many :choices, dependent: :destroy
-  accepts_nested_attributes_for :choices, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :choices, allow_destroy: true
   # 質問の種類（テキスト、選択肢など）を管理するフィールドを追加
   enum question_type: {
     text: 0,
