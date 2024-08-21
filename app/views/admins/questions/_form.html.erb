@@ -11,7 +11,6 @@
     <%= form.select :question_type, Question.question_types.keys.map { |k| [k.humanize, k] } %>
   </div>
 
-  <h4>選択肢 (現在の数: <%= form.object.choices.size %>)</h4>
   <h4>Choices</h4>
   <div id="choices_<%= form.index %>">
     <%= form.fields_for :choices do |choice_form| %>
@@ -20,7 +19,7 @@
   </div>
 
   <%= form.submit "Add choice",
-    formaction: admins_choice_path(Time.now.to_i, question_index: form.index),
+    formaction: admins_choice_path(form.object.choices.size, question_index: form.index),
     formmethod: :post,
     formnovalidate: true,
     id: "add-choice-#{form.index}" %>

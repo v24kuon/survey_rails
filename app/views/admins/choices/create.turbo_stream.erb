@@ -4,7 +4,7 @@
     <%= question_form.fields_for :choices, child_index: params[:index] do |choice_form| %>
       <%= turbo_stream.replace "add-choice-#{question_index}" do %>
         <%= survey_form.submit "Add choice2",
-          formaction: admins_choice_path(Time.now.to_i, question_index: question_index),
+          formaction: admins_choice_path(choice_form.index.to_i + 1, question_index: question_index),
           formmethod: :post,
           formnovalidate: true,
           id: "add-choice-#{question_index}" %>

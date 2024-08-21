@@ -1,4 +1,4 @@
-<%= turbo_frame_tag "choice_#{form.index}" do %>
+<%= turbo_frame_tag "choice_#{form.options[:parent_builder].index}_#{form.index}" do %>
   <%= form.hidden_field :id %>
 
   <div>
@@ -15,5 +15,5 @@
     formaction: admins_choice_path(form.index, question_index: form.options[:parent_builder].index, id: form.object.id),
     formmethod: :delete,
     formnovalidate: true,
-    data: { turbo_frame: "choice_#{form.index}" } %>
+    data: { turbo_frame: "choice_#{form.options[:parent_builder].index}_#{form.index}" } %>
 <% end %>
