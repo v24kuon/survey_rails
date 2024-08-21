@@ -38,12 +38,13 @@
 ・アンケートを一覧表示できる<br>
 ・アンケートのCRUD 作成完了(URL 設定完了)<br>
 ・アンケートのタイトルと概要と説明の入力は必須<br>
-・アンケートのの回答を必須にするかチェックボックスで選択できる<br>
-・アンケートの質問テーブルはアンケート入力画面で入力<br>
+・アンケートの質問は別ページではなくアンケート入力画面で入力<br>
 ・質問のタイトルと回答の形式(text,email 等の input の type)を入力する<br>
+・質問の回答を必須にするか選択できる
 ・「追加ボタン」で動的に質問フォームを追加できる<br>
 ・「削除ボタン」で動的に質問フォームを削除できる<br>
-・アンケート詳細画面で紐づいた質問が確認できる<br>
+・一部の回答形式(ラジオボタン等)は選択肢を動的に追加できる<br>
+・アンケート詳細画面で紐づいた質問と選択肢が確認できる<br>
 ・上記はテスト作成済み
 
 ### ユーザー側
@@ -76,13 +77,14 @@
                                          PUT    /users(.:format)                                                                                  devise/registrations#update
                                          DELETE /users(.:format)                                                                                  devise/registrations#destroy
                                          POST   /users(.:format)                                                                                  devise/registrations#create
+                                    user GET    /users/:id(.:format)                                                                              users#show
                                  surveys GET    /surveys(.:format)                                                                                surveys#index
                                   survey GET    /surveys/:id(.:format)                                                                            surveys#show
                        new_admin_session GET    /admins/sign_in(.:format)                                                                         admins/sessions#new
                            admin_session POST   /admins/sign_in(.:format)                                                                         admins/sessions#create
                    destroy_admin_session DELETE /admins/sign_out(.:format)                                                                        admins/sessions#destroy
-                  admins_survey_question DELETE /admins/surveys/:survey_id/questions/:id(.:format)                                                admins/questions#destroy
-              admins_survey_new_question GET    /admins/surveys/:survey_id/questions/new(.:format)                                                admins/surveys#new_question
+                            admins_users GET    /admins/users(.:format)                                                                           admins/users#index
+                             admins_user GET    /admins/users/:id(.:format)                                                                       admins/users#show
                           admins_surveys GET    /admins/surveys(.:format)                                                                         admins/surveys#index
                                          POST   /admins/surveys(.:format)                                                                         admins/surveys#create
                        new_admins_survey GET    /admins/surveys/new(.:format)                                                                     admins/surveys#new
@@ -91,5 +93,9 @@
                                          PATCH  /admins/surveys/:id(.:format)                                                                     admins/surveys#update
                                          PUT    /admins/surveys/:id(.:format)                                                                     admins/surveys#update
                                          DELETE /admins/surveys/:id(.:format)                                                                     admins/surveys#destroy
-                                    root GET    /                                                                                                 surveys#home
+                         admins_question DELETE /admins/questions/:index(/:id)(.:format)                                                          admins/questions#destroy
+                                         POST   /admins/questions/:index(.:format)                                                                admins/questions#create
+                           admins_choice DELETE /admins/choices/:index(/:id)(.:format)                                                            admins/choices#destroy
+                                         POST   /admins/choices/:index(.:format)                                                                  admins/choices#create
+                                    root GET    /
 ```
