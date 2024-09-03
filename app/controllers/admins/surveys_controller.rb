@@ -55,7 +55,7 @@ module Admins
     def survey_params
       params.require(:survey).permit(
         :title, :description, :summary,
-        questions_attributes: [:id, :question_title, :question_type, :_destroy,
+        questions_attributes: [:id, :question_title, :question_type, :is_required, :position, :_destroy,
           choices_attributes: [:id, :choice_text, :order_number, :_destroy]]
       )
     end

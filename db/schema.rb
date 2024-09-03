@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_06_011042) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_26_051731) do
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -39,7 +39,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_06_011042) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_required", default: false
+    t.integer "position"
     t.index ["survey_id"], name: "index_questions_on_survey_id"
+  end
+
+  create_table "responses", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "survey_id", null: false
+    t.json "answers"
+    t.string "status", default: "in_progress"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["survey_id"], name: "index_responses_on_survey_id"
+    t.index ["user_id", "survey_id"], name: "index_responses_on_user_id_and_survey_id", unique: true
+    t.index ["user_id"], name: "index_responses_on_user_id"
   end
 
   create_table "surveys", force: :cascade do |t|
@@ -71,4 +86,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_06_011042) do
 
   add_foreign_key "choices", "questions"
   add_foreign_key "questions", "surveys"
+  add_foreign_key "responses", "surveys"
+  add_foreign_key "responses", "users"
 end

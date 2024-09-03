@@ -1,5 +1,7 @@
-<%= turbo_frame_tag "question_#{form.index}" do %>
+<%= turbo_frame_tag "question_#{form.index}", data: { question_order_target: "frame" } do %>
+
   <%= form.hidden_field :id %>
+  <%= form.hidden_field :position %>
 
   <div>
     <%= form.label :question_title, "質問タイトル" %>
@@ -28,6 +30,9 @@
     formmethod: :post,
     formnovalidate: true,
     id: "add-choice-#{form.index}" %>
+
+  <button type="button" data-action="question-order#moveUp">↑</button>
+  <button type="button" data-action="question-order#moveDown">↓</button>
 
   <%= form.submit "destroy question",
     formaction: admins_question_path(form.index, form.object.id),

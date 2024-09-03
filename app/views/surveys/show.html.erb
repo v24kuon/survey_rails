@@ -1,32 +1,7 @@
 <h2><%= @survey.title %></h2>
-<p>説明:<br><%= @survey.description %></p>
+<p>説明: <%= @survey.description %></p>
+<p>要約: <%= @survey.summary %></p>
 
-<%= form_with(url: '#', local: true, multipart: true) do |form| %>
-  <%= form.hidden_field :survey_id, value: @survey.id %>
 
-  <% @survey.questions.each do |question| %>
-    <div class="question">
-      <%= form.label "responses[#{question.id}]", question.question_title %>
-      <% case question.question_type %>
-      <% when 'textarea' %>
-        <%= form.text_area "responses[#{question.id}]", required: question.is_required %>
-      <% when 'checkbox' %>
-        <%= form.check_box "responses[#{question.id}]", required: question.is_required %>
-      <% when 'radio' %>
-        <%# ラジオボタンの選択肢を動的に生成する必要があります %>
-        <%= form.radio_button "responses[#{question.id}]", "option_value", required: question.is_required %>
-      <% when 'dropdown' %>
-        <%# セレクトボックスの選択肢を動的に生成する必要があります %>
-        <%= form.select "responses[#{question.id}]", ["選択肢1", "選択肢2"], { prompt: "選択してください" }, required: question.is_required %>
-      <% when 'file' %>
-        <%= form.file_field "responses[#{question.id}]", required: question.is_required %>
-      <% else %>
-        <%= form.send("#{question.question_type}_field", "responses[#{question.id}]", required: question.is_required) %>
-      <% end %>
-    </div>
-  <% end %>
-
-  <%= form.submit '回答を送信' %>
-<% end %>
-
-<p><%= link_to 'Back', surveys_path %></p>
+<%= link_to '回答する', new_survey_response_path(@survey) if user_signed_in? %>
+<%= link_to '戻る', surveys_path %>

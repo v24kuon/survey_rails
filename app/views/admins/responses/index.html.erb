@@ -1,0 +1,26 @@
+<h1><%= @survey.title %>の回答者一覧</h1>
+
+<% if @responses.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>回答者名</th>
+        <th>回答日時</th>
+        <th>詳細</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @responses.each do |response| %>
+        <tr>
+          <td><%= response.user.full_name %></td>
+          <td><%= response.completed_at&.strftime('%Y-%m-%d %H:%M:%S') %></td>
+          <td><%= link_to '詳細を見る', admins_survey_response_path(@survey, response) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>まだ回答がありません。</p>
+<% end %>
+
+<%= link_to '戻る', admins_survey_path(@survey) %>

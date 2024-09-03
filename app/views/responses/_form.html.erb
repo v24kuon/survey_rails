@@ -1,0 +1,90 @@
+  <% if @survey.responses.exists?(user: current_user) %>
+    <p>回答済みです</p>
+    <h2>あなたの回答</h2>
+    <% response = @survey.responses.find_by(user: current_user) %>
+    <% @survey.questions.each do |question| %>
+      <div class="question">
+        <span><%= question.question_title %></span>
+        <span>
+          <% if response.answers[question.id.to_s].present? %>
+            <% case question.question_type %>
+            <% when 'checkbox' %>
+              <%= response.answers[question.id.to_s].map { |choice_id| question.choices.find(choice_id).choice_text }.join(', ') %>
+            <% when 'radio', 'dropdown' %>
+              <%= question.choices.find(response.answers[question.id.to_s]).choice_text %>
+            <% else %>
+              <%= response.answers[question.id.to_s] %>
+            <% end %>
+          <% else %>
+            未回答
+          <% end %>
+        </span>
+      </div>
+    <% end %>
+  <% else %>
+  <%= form_with(model: [@survey, @response], local: true, data: { turbo: false }) do |form| %>
+    <% if @response.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@response.errors.count, "error") %> prohibited this response from being saved:</h2>
+        <ul>
+          <% @response.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <% @survey.questions.each do |question| %>
+      <div class="question">
+        <%= form.label "answers[#{question.id}]", question.question_title %>
+        <% case question.question_type %>
+        <% when 'text', 'number', 'date', 'url', 'email', 'tel' %>
+          <%= form.send("#{question.question_type}_field", "answers[#{question.id}]", required: question.is_required, name: "response[answers][#{question.id}]") %>
+        <% when 'textarea' %>
+          <%= form.text_area "answers[#{question.id}]", required: question.is_required, name: "response[answers][#{question.id}]" %>
+        <% when 'checkbox' %>
+          <% question.choices.each do |choice| %>
+            <%= form.check_box "answers[#{question.id}][]", { multiple: true, required: question.is_required,class: "checkbox-group-#{question.id}" }, choice.id, nil %>
+            <%= form.label "answers[#{question.id}][]", choice.choice_text %>
+          <% end %>
+          <% if question.is_required && !@checkbox_script_rendered %>
+            <% @checkbox_script_rendered = true %>
+            <script>
+              (() => {
+                const handleCheckboxGroup = (questionId) => {
+                  const checkboxes = document.querySelectorAll(`.checkbox-group-${questionId}`);
+                  const updateRequired = () => {
+                    const anyChecked = [...checkboxes].some(cb => cb.checked);
+                    checkboxes.forEach(cb => cb.required = !anyChecked);
+                  };
+                  checkboxes.forEach(checkbox => checkbox.addEventListener('change', updateRequired));
+                  updateRequired();
+                };
+
+                const initializeCheckboxGroups = () => {
+                  const questionIds = [...new Set([...document.querySelectorAll('[class^="checkbox-group-"]')].map(el => el.className.match(/checkbox-group-(\d+)/)[1]))];
+                  questionIds.forEach(handleCheckboxGroup);
+                };
+
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', initializeCheckboxGroups);
+                } else {
+                  initializeCheckboxGroups();
+                }
+              })();
+            </script>
+          <% end %>
+        <% when 'radio' %>
+          <% question.choices.each do |choice| %>
+            <%= form.radio_button "answers[#{question.id}]", choice.id, required: question.is_required, name: "response[answers][#{question.id}]" %>
+            <%= form.label "answers[#{question.id}]_#{choice.id}", choice.choice_text %>
+          <% end %>
+        <% when 'dropdown' %>
+          <%= form.select "answers[#{question.id}]", question.choices.map { |c| [c.choice_text, c.id] }, { prompt: "選択してください" }, required: question.is_required, name: "response[answers][#{question.id}]" %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= form.submit '回答を送信' %>
+  <% end %>
+<% end %>

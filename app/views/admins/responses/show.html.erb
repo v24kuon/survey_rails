@@ -1,0 +1,24 @@
+<h1><%= @survey.title %>の回答詳細</h1>
+
+<h2>回答者: <%= @response.user.full_name %></h2>
+<p>回答日時: <%= @response.completed_at&.strftime('%Y-%m-%d %H:%M:%S') %></p>
+
+<h3>回答内容:</h3>
+<% @survey.questions.each do |question| %>
+  <div class="question">
+    <h4><%= question.question_title %></h4>
+    <p>
+      <% case question.question_type %>
+      <% when 'checkbox' %>
+        <%= @response.answers[question.id.to_s].map { |choice_id| question.choices.find(choice_id).choice_text }.join(', ') %>
+      <% when 'radio', 'dropdown' %>
+        <%= question.choices.find(@response.answers[question.id.to_s]).choice_text %>
+      <% else %>
+        <%= @response.answers[question.id.to_s] %>
+      <% end %>
+    </p>
+  </div>
+<% end %>
+
+<%= link_to '回答者一覧に戻る', admins_survey_responses_path(@survey) %>
+<%= link_to 'アンケート詳細に戻る', admins_survey_path(@survey) %>
