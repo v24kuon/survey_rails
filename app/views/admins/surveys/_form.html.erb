@@ -26,8 +26,8 @@
   </div>
 
   <h4>Questions</h4>
-  <div id="questions">
-    <%= form.fields_for :questions do |question_form| %>
+  <div id="questions" data-controller="question-order">
+    <%= form.fields_for :questions, @survey.questions.sort_by(&:position) do |question_form| %>
       <%= render "admins/questions/form", form: question_form %>
     <% end %>
   </div>

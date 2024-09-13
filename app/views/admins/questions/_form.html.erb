@@ -1,7 +1,7 @@
 <%= turbo_frame_tag "question_#{form.index}", data: { question_order_target: "frame" } do %>
 
   <%= form.hidden_field :id %>
-  <%= form.hidden_field :position %>
+  <%= form.hidden_field :position, value: form.object.position || form.index %>
 
   <div>
     <%= form.label :question_title, "質問タイトル" %>
@@ -19,8 +19,8 @@
   </div>
 
   <h4>Choices</h4>
-  <div id="choices_<%= form.index %>">
-    <%= form.fields_for :choices do |choice_form| %>
+  <div id="choices_<%= form.index %>" data-controller="choice-order">
+    <%= form.fields_for :choices, form.object.choices.sort_by(&:order_number) do |choice_form| %>
       <%= render "admins/choices/form", form: choice_form %>
     <% end %>
   </div>

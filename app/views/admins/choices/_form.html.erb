@@ -1,15 +1,14 @@
-<%= turbo_frame_tag "choice_#{form.options[:parent_builder].index}_#{form.index}" do %>
+<%= turbo_frame_tag "choice_#{form.options[:parent_builder].index}_#{form.index}", data: { choice_order_target: "frame" } do %>
   <%= form.hidden_field :id %>
+  <%= form.hidden_field :order_number, value: form.object.order_number || form.index %>
 
   <div>
     <%= form.label :choice_text, "選択肢テキスト" %>
     <%= form.text_field :choice_text %>
   </div>
 
-  <div>
-    <%= form.label :order_number, "順序" %>
-    <%= form.number_field :order_number %>
-  </div>
+  <button type="button" data-action="choice-order#moveUp">上に上げる</button>
+  <button type="button" data-action="choice-order#moveDown">下に下げる</button>
 
   <%= form.submit "destroy choice",
     formaction: admins_choice_path(form.index, question_index: form.options[:parent_builder].index, id: form.object.id),

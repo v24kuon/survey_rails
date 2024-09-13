@@ -1,27 +1,29 @@
-  <% if @survey.responses.exists?(user: current_user) %>
-    <p>回答済みです</p>
-    <h2>あなたの回答</h2>
-    <% response = @survey.responses.find_by(user: current_user) %>
-    <% @survey.questions.each do |question| %>
-      <div class="question">
-        <span><%= question.question_title %></span>
-        <span>
-          <% if response.answers[question.id.to_s].present? %>
-            <% case question.question_type %>
-            <% when 'checkbox' %>
-              <%= response.answers[question.id.to_s].map { |choice_id| question.choices.find(choice_id).choice_text }.join(', ') %>
-            <% when 'radio', 'dropdown' %>
-              <%= question.choices.find(response.answers[question.id.to_s]).choice_text %>
-            <% else %>
-              <%= response.answers[question.id.to_s] %>
-            <% end %>
+<% if @survey.responses.exists?(user: current_user) %>
+  <p>回答済みです</p>
+  <h2>あなたの回答</h2>
+  <% response = @survey.responses.find_by(user: current_user) %>
+  <% @survey.questions.order(:position).each do |question| %>
+    <div class="question">
+      <span><%= question.question_title %></span>
+      <span>
+        <% if response.answers[question.id.to_s].present? %>
+          <% case question.question_type %>
+          <% when 'checkbox' %>
+            <%= response.answers[question.id.to_s].map { |choice_id| question.choices.find(choice_id).choice_text }.join(', ') %>
+          <% when 'radio', 'dropdown' %>
+            <%= question.choices.find(response.answers[question.id.to_s]).choice_text %>
+          <% when 'file' %>
+            <%= link_to 'ファイルを表示', rails_blob_path(response.files.find_by(question_id: question.id), disposition: "attachment") if response.files.find_by(question_id: question.id).present? %>
           <% else %>
-            未回答
+            <%= response.answers[question.id.to_s] %>
           <% end %>
-        </span>
-      </div>
-    <% end %>
-  <% else %>
+        <% else %>
+          未回答
+        <% end %>
+      </span>
+    </div>
+  <% end %>
+<% else %>
   <%= form_with(model: [@survey, @response], local: true, data: { turbo: false }) do |form| %>
     <% if @response.errors.any? %>
       <div id="error_explanation">
@@ -34,17 +36,21 @@
       </div>
     <% end %>
 
-    <% @survey.questions.each do |question| %>
+    <% @survey.questions.order(:position).each do |question| %>
       <div class="question">
         <%= form.label "answers[#{question.id}]", question.question_title %>
         <% case question.question_type %>
-        <% when 'text', 'number', 'date', 'url', 'email', 'tel' %>
+        <% when 'text', 'number', 'date', 'url', 'email' %>
           <%= form.send("#{question.question_type}_field", "answers[#{question.id}]", required: question.is_required, name: "response[answers][#{question.id}]") %>
+        <% when 'tel' %>
+          <%= form.telephone_field "answers[#{question.id}]", required: question.is_required, name: "response[answers][#{question.id}]" %>
         <% when 'textarea' %>
           <%= form.text_area "answers[#{question.id}]", required: question.is_required, name: "response[answers][#{question.id}]" %>
+        <% when 'file' %>
+          <%= form.file_field "files[#{question.id}]", required: question.is_required, name: "response[files][#{question.id}]" %>
         <% when 'checkbox' %>
-          <% question.choices.each do |choice| %>
-            <%= form.check_box "answers[#{question.id}][]", { multiple: true, required: question.is_required,class: "checkbox-group-#{question.id}" }, choice.id, nil %>
+          <% question.choices.order(:order_number).each do |choice| %>
+            <%= form.check_box "answers[#{question.id}][]", { multiple: true, required: question.is_required, class: "checkbox-group-#{question.id}" }, choice.id, nil %>
             <%= form.label "answers[#{question.id}][]", choice.choice_text %>
           <% end %>
           <% if question.is_required && !@checkbox_script_rendered %>
@@ -75,12 +81,12 @@
             </script>
           <% end %>
         <% when 'radio' %>
-          <% question.choices.each do |choice| %>
+          <% question.choices.order(:order_number).each do |choice| %>
             <%= form.radio_button "answers[#{question.id}]", choice.id, required: question.is_required, name: "response[answers][#{question.id}]" %>
             <%= form.label "answers[#{question.id}]_#{choice.id}", choice.choice_text %>
           <% end %>
         <% when 'dropdown' %>
-          <%= form.select "answers[#{question.id}]", question.choices.map { |c| [c.choice_text, c.id] }, { prompt: "選択してください" }, required: question.is_required, name: "response[answers][#{question.id}]" %>
+          <%= form.select "answers[#{question.id}]", question.choices.order(:order_number).map { |c| [c.choice_text, c.id] }, { prompt: "選択してください" }, required: question.is_required, name: "response[answers][#{question.id}]" %>
         <% end %>
       </div>
     <% end %>

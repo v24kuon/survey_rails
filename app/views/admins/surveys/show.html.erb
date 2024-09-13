@@ -1,23 +1,27 @@
 <h1><%= @survey.title %></h1>
-<p>概要:<%= @survey.summary %></p>
-<p>説明:<%= @survey.description %></p>
+
+<p><strong>概要:</strong> <%= @survey.summary %></p>
+<p><strong>説明:</strong> <%= @survey.description %></p>
 
 <h2>質問一覧</h2>
-<ul>
-  <% @survey.questions.each do |question| %>
-    <li>
-      <strong>タイトル:</strong> <%= question.question_title %><br>
-      <strong>タイプ:</strong> <%= question.question_type %><br>
-      <strong>入力:</strong> <%= question.is_required ? '必須' : '必須ではない' %><br>
-      <strong>選択肢:</strong> <%= question.choices.map(&:choice_text).join(', ') %><br>
-    </li>
-  <% end %>
-</ul>
 
-<h2><%= link_to "回答者一覧", admins_survey_responses_path(@survey) %></h2>
+<% @survey.questions.order(:position).each do |question| %>
+  <div class="question">
+    <h3><%= question.question_title %></h3>
+    <p>タイプ: <%= question.question_type %></p>
+    <p>必須: <%= question.is_required ? 'はい' : 'いいえ' %></p>
 
-<div>
-  <%= link_to "Edit this survey", edit_admins_survey_path(@survey) %> |
-  <%= link_to "Back to surveys", admins_surveys_path %>
-  <%= button_to "Destroy this survey", admins_survey_path(@survey), method: :delete %>
-</div>
+    <% if question.choices.any? %>
+      <h4>選択肢:</h4>
+      <ul>
+        <% question.choices.order(:order_number).each do |choice| %>
+          <li><%= choice.choice_text %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% end %>
+
+<%= link_to '回答一覧', admins_survey_responses_path(@survey) %>
+<%= link_to '編集', edit_admins_survey_path(@survey) %> |
+<%= link_to '戻る', admins_surveys_path %>

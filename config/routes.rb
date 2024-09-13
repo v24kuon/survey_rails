@@ -27,7 +27,6 @@ Rails.application.routes.draw do
         post '/' => "choices#create"
       end
     end
-    resources :responses, only: [:index]
   end
 
   root 'surveys#home'
