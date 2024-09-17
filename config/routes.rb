@@ -10,6 +10,8 @@ Rails.application.routes.draw do
     sessions: "admins/sessions"
   }
 
+  get '/admins', to: 'admins/surveys#index'
+
   namespace :admins do
     resources :users, only: [:index, :show]
     resources :surveys do
